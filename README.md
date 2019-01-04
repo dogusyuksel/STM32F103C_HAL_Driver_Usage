@@ -16,17 +16,30 @@ HAL_DRIVERS -> CubeMX General Steps
   
 GPIO OUTPUT
 --------------
-1. Select a pin
-2. Select GPIO_OUTPUT
-3. Right Click and ENTER USER LABEL
-4. Insert for example "LED_GREEN"
+  1. Select a pin
+  2. Select GPIO_OUTPUT
+  3. Right Click and ENTER USER LABEL
+  4. Insert for example "LED_GREEN"
 
 
 
 GPIO INPUT WITH INTERRUPT
 -----------------------------
-1. Select a pin
-2. Select GPIO_EXTI Mode
-3. Insert a user label
-4. Configuration Tab -> System Part -> NVIC Button -> NVIC Tab -> Enable EXTI Interrupt Tick -> Select priority and subPriority
-5. Configuration Tab -> System Part -> GPIO Button -> Select the pin -> and select GPIO Mode for example Trigger in Rising Edge
+  1. Select a pin
+  2. Select GPIO_EXTI Mode
+  3. Insert a user label
+  4. Configuration Tab -> System Part -> NVIC Button -> NVIC Tab -> Enable EXTI Interrupt Tick -> Select priority and subPriority
+  5. Configuration Tab -> System Part -> GPIO Button -> Select the pin -> and select GPIO Mode for example Trigger in Rising Edge
+
+
+TIMER
+-------------------
+  1. Select a timer and Clock Source -> Internal Clock Source
+  2. Control Clock Configuration tabs and see "APB1 and APB2 Timer Clock" part. In my condition they are equal and 72MHz.
+  3. Configuration Tab -> System -> NVIC -> NVIC Tab -> Open the Timer Global Interrupt -> Arrange interrupt priority and subPreority.
+  4. Configuration Tab -> Control Tab -> Select the Timer that you want to arrange -> Parameter Settings Tab -> Arrange Prescalar and Counter Period
+  eg: Our clock source is 72MHz, lets say arrange 500ms timer then insert prescalar: 72000 and period: 500 (these are uint32_t variables)
+  because 72M / (72000 * 500) = 0.5 this means MILLIS, 500 ms
+  5. You finally activate the time after Timer Init function and before the main loop with this code "HAL_TIM_Base_Start_IT(&htim2);"
+  Here, you should think that you activate the TIM2 for example.
+
