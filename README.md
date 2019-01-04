@@ -30,6 +30,20 @@ GPIO INPUT WITH INTERRUPT
   3. Insert a user label
   4. Configuration Tab -> System Part -> NVIC Button -> NVIC Tab -> Enable EXTI Interrupt Tick -> Select priority and subPriority
   5. Configuration Tab -> System Part -> GPIO Button -> Select the pin -> and select GPIO Mode for example Trigger in Rising Edge
+  
+    /**
+    * @brief  EXTI line detection callbacks.
+    * @param  GPIO_Pin: Specifies the pins connected EXTI line
+    * @retval None
+    */
+    __weak void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+    {
+      /* Prevent unused argument(s) compilation warning */
+      UNUSED(GPIO_Pin);
+      /* NOTE: This function Should not be modified, when the callback is needed,
+               the HAL_GPIO_EXTI_Callback could be implemented in the user file
+       */
+    }
 
 
 TIMER
@@ -43,3 +57,16 @@ TIMER
   5. You finally activate the time after Timer Init function and before the main loop with this code "HAL_TIM_Base_Start_IT(&htim2);"
   Here, you should think that you activate the TIM2 for example.
 
+    /**
+      * @brief  Period elapsed callback in non blocking mode 
+      * @param  htim : TIM handle
+      * @retval None
+      */
+      __weak void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+      {
+        /* Prevent unused argument(s) compilation warning */
+        UNUSED(htim);
+        /* NOTE : This function Should not be modified, when the callback is needed,
+                  the __HAL_TIM_PeriodElapsedCallback could be implemented in the user file
+         */
+      }
