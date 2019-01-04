@@ -70,3 +70,28 @@ TIMER
                   the __HAL_TIM_PeriodElapsedCallback could be implemented in the user file
          */
       }
+      
+      
+ANALOG
+------------------
+1. Select the pin that you want to use as ADC pin
+2. Enter user labeled name to that pin
+3. Be careful about the ADC clock prescalar, and enable its global NVIC interrupt
+4. Configuration Tab -> Analog -> ADC1 (for example) -> Parameter Setting -> Continuous Conversation Mode -> Enabled
+4. Configuration Tab -> Analog -> ADC1 (for example) -> Parameter Setting -> Scan Conversation Mode -> Enabled //if multiple analog channels
+5. Configuration Tab -> Analog -> ADC1 (for example) -> Parameter Setting -> NoF Conversation : Equal with the analog channels
+6. If there are multiple analog channels, than you can arrange sample time and reading order by using RANK part.
+7. If there is single channel, you do not need to configure dma and use the code below;
+
+            HAL_ADC_Start(&hadc1);
+            HAL_ADC_PollForConversion(&hadc1, 100);
+            uint16_t adcResult = HAL_ADC_GetValue(&hadc1);
+            HAL_ADC_Stop(&hadc1);
+	
+8. Otherwise, you need to configure dma.
+9. Configuration Tab -> Analog -> ADC1 -> DMA Tab and select Add button and then select ADC1 in DMA Request
+10. Select DMA Mode Circular and data width as half-word/half-word (wrt your adc pin resolution)
+NOTE THAT: set no too fast adc reading cycle in rank config, select all your pins in rank canfig
+
+            uint16_t myAnalogValues[2] = {0, 0}; //outside of the main
+            HAL_ADC_Start_DMA(&hadc1, (uint32_t *)myAnalogValues, 2); //after init adc, before main loop
