@@ -120,3 +120,15 @@ UART
 			   the HAL_UART_RxCpltCallback could be implemented in the user file
 		   */
 		}
+
+
+SPI
+--------------
+1. Select SPI mode as Full Duplex Master
+2. Configuration -> Connectivity -> SPI -> Parameter Setting -> Set "Prescalar" to arrange "Baudrate"
+3. Use these functions to communicate the device
+
+	HAL_SPI_Transmit
+	
+	HAL_SPI_Receive
+
