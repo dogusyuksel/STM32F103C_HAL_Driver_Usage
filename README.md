@@ -95,3 +95,28 @@ NOTE THAT: set no too fast adc reading cycle in rank config, select all your pin
 
             uint16_t myAnalogValues[2] = {0, 0}; //outside of the main
             HAL_ADC_Start_DMA(&hadc1, (uint32_t *)myAnalogValues, 2); //after init adc, before main loop
+
+
+
+UART
+-----------------
+1. Select any uart from cubeMX for example Uart3
+2. Select Mode -> Asynch
+3. Goto Configuration -> Connectivity -> USART3 -> Parameter Setting and set baudrate
+4. Then Goto Configuration -> System -> NVIC -> NVIC and open USART3 Global Interrupt and configure priorities
+
+
+		/**
+		  * @brief  Rx Transfer completed callbacks.
+		  * @param  huart: pointer to a UART_HandleTypeDef structure that contains
+		  *                the configuration information for the specified UART module.
+		  * @retval None
+		  */
+		__weak void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+		{
+		  /* Prevent unused argument(s) compilation warning */
+		  UNUSED(huart);
+		  /* NOTE: This function Should not be modified, when the callback is needed,
+			   the HAL_UART_RxCpltCallback could be implemented in the user file
+		   */
+		}
