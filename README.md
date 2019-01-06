@@ -31,6 +31,7 @@ GPIO INPUT WITH INTERRUPT
   4. Configuration Tab -> System Part -> NVIC Button -> NVIC Tab -> Enable EXTI Interrupt Tick -> Select priority and subPriority
   5. Configuration Tab -> System Part -> GPIO Button -> Select the pin -> and select GPIO Mode for example Trigger in Rising Edge
   
+```ruby
     /**
     * @brief  EXTI line detection callbacks.
     * @param  GPIO_Pin: Specifies the pins connected EXTI line
@@ -44,6 +45,7 @@ GPIO INPUT WITH INTERRUPT
                the HAL_GPIO_EXTI_Callback could be implemented in the user file
        */
     }
+```
 
 
 TIMER
@@ -57,6 +59,7 @@ TIMER
   5. You finally activate the time after Timer Init function and before the main loop with this code "HAL_TIM_Base_Start_IT(&htim2);"
   Here, you should think that you activate the TIM2 for example.
 
+```ruby
     /**
       * @brief  Period elapsed callback in non blocking mode 
       * @param  htim : TIM handle
@@ -70,6 +73,7 @@ TIMER
                   the __HAL_TIM_PeriodElapsedCallback could be implemented in the user file
          */
       }
+ ```
       
       
 ANALOG
@@ -83,19 +87,22 @@ ANALOG
 6. If there are multiple analog channels, than you can arrange sample time and reading order by using RANK part.
 7. If there is single channel, you do not need to configure dma and use the code below;
 
+```ruby
             HAL_ADC_Start(&hadc1);
             HAL_ADC_PollForConversion(&hadc1, 100);
             uint16_t adcResult = HAL_ADC_GetValue(&hadc1);
             HAL_ADC_Stop(&hadc1);
+```
 	
 8. Otherwise, you need to configure dma.
 9. Configuration Tab -> Analog -> ADC1 -> DMA Tab and select Add button and then select ADC1 in DMA Request
 10. Select DMA Mode Circular and data width as half-word/half-word (wrt your adc pin resolution)
 NOTE THAT: set no too fast adc reading cycle in rank config, select all your pins in rank canfig
 
+```ruby
             uint16_t myAnalogValues[2] = {0, 0}; //outside of the main
             HAL_ADC_Start_DMA(&hadc1, (uint32_t *)myAnalogValues, 2); //after init adc, before main loop
-
+```
 
 
 UART
@@ -106,7 +113,7 @@ UART
 4. Then Goto Configuration -> System -> NVIC -> NVIC and open USART3 Global Interrupt and configure priorities
 5. Add "__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);" line at the end of MX_USART3_Init function.
 
-
+```ruby
 		/**
 		  * @brief  Rx Transfer completed callbacks.
 		  * @param  huart: pointer to a UART_HandleTypeDef structure that contains
@@ -121,6 +128,7 @@ UART
 			   the HAL_UART_RxCpltCallback could be implemented in the user file
 		   */
 		}
+```
 
 
 SPI
@@ -129,9 +137,11 @@ SPI
 2. Configuration -> Connectivity -> SPI -> Parameter Setting -> Set "Prescalar" to arrange "Baudrate"
 3. Use these functions to communicate the device
 
+```ruby
 	HAL_SPI_Transmit
 	
 	HAL_SPI_Receive
+```
 
 PWM
 --------------
@@ -151,6 +161,7 @@ Then period should be 200 and prescalar should be calculated like that;
 SLEEP
 ------------------------
 
+```ruby
 	//it wakes up in any interrupt
 	void EnterSleepMode(void)
 	{
@@ -175,3 +186,41 @@ SLEEP
 		HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 		HAL_PWR_EnterSTANDBYMode();
 	}
+```
+	
+
+RTC
+--------------------
+1. Enable RCC -> Activate Clock Source -> Activate Calendar
+2. Make your clock configuration and look at the "toRTC (KHz)" part that is output of the RTC Mux
+3. Lets say it is 40 (mine too). This value will be used to calculate prescalars in next steps
+4. Goto Configuration -> Control -> RTC -> Parameter Setting.
+	- Data Format: BCD Value
+	- Insert your initial date time parameters
+	- "Enable" "Auto Predivider Calculator", if this is "Disable" then you need to insert a value for 1Hz wrt 40KHz.
+5. Then generate the code and write these code parts.
+
+```ruby
+	//parameter part
+	RTC_DateTypeDef sdatestructget;
+	RTC_TimeTypeDef stimestructget;
+	uint8_t second = 0;
+	uint8_t minute = 0;
+	uint8_t hour = 0;
+	uint8_t day = 0;
+	uint8_t month = 0;
+	uint8_t year = 0;
+
+
+	//in main loop
+	HAL_RTC_GetTime(&hrtc, &stimestructget, RTC_FORMAT_BCD);
+	HAL_RTC_GetDate(&hrtc, &sdatestructget, RTC_FORMAT_BCD);
+
+	second = stimestructget.Seconds;
+	minute = stimestructget.Minutes;
+	hour   = stimestructget.Hours;
+
+	day    = sdatestructget.Date;
+	month  = sdatestructget.Month;
+	year   = sdatestructget.Year;
+```
