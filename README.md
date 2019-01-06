@@ -146,3 +146,32 @@ Then period should be 200 and prescalar should be calculated like that;
 6. No need to open interrupt.
 7. Then start the pwm with "HAL_TIM_PWM_Start(&htimx, TIM_CHANNEL_X)"
 8. Then insert a value to arrange duty cycle in CCR register like that "htimx.instance->CCRX = 50" for example
+
+
+SLEEP
+------------------------
+
+	//it wakes up in any interrupt
+	void EnterSleepMode(void)
+	{
+		HAL_SuspendTick();
+		HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+		HAL_ResumeTick();
+	}
+
+	//stop mode, trigged by any EXTI line, since clocks are disabled, system should be restarted
+	void EnterStopMode(void)
+	{
+		HAL_SuspendTick();
+		HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+		HAL_ResumeTick();
+		HAL_Init();
+		SystemClock_Config();
+	}
+
+	//wakeup pin rising edge, since clocks are disabled, system should be restarted
+	void EnterStandByMode(void)
+	{
+		HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
+		HAL_PWR_EnterSTANDBYMode();
+	}
