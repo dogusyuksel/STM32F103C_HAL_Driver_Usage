@@ -132,3 +132,16 @@ SPI
 	
 	HAL_SPI_Receive
 
+PWM
+--------------
+1. Select the pin as TIMxCHx
+2. Then select the TIMx and select its clock source as internal clock
+3. Select the "Channel" as PWM Generation CHx
+4. Goto Configuration -> Control -> TIM -> Parameter Setting 
+5. Decide the PWM frequency and steps
+My clock sources are 72MHz and I decide the steps 200 and frequency 10KHz for example.
+Then period should be 200 and prescalar should be calculated like that;
+72MHz / (10 KHz * 200) = 36
+6. No need to open interrupt.
+7. Then start the pwm with "HAL_TIM_PWM_Start(&htimx, TIM_CHANNEL_X)"
+8. Then insert a value to arrange duty cycle in CCR register like that "htimx.instance->CCRX = 50" for example
