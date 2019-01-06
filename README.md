@@ -30,7 +30,6 @@ GPIO INPUT WITH INTERRUPT
   3. Insert a user label
   4. Configuration Tab -> System Part -> NVIC Button -> NVIC Tab -> Enable EXTI Interrupt Tick -> Select priority and subPriority
   5. Configuration Tab -> System Part -> GPIO Button -> Select the pin -> and select GPIO Mode for example Trigger in Rising Edge
-  6. Add "__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);" line at the end of MX_USART3_Init function.
   
     /**
     * @brief  EXTI line detection callbacks.
@@ -105,6 +104,7 @@ UART
 2. Select Mode -> Asynch
 3. Goto Configuration -> Connectivity -> USART3 -> Parameter Setting and set baudrate
 4. Then Goto Configuration -> System -> NVIC -> NVIC and open USART3 Global Interrupt and configure priorities
+5. Add "__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);" line at the end of MX_USART3_Init function.
 
 
 		/**
