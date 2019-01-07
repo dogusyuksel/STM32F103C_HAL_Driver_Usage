@@ -131,7 +131,7 @@ UART
 ```
 
 
-SPI
+SPI_MASTER
 --------------
 1. Select SPI mode as Full Duplex Master
 2. Configuration -> Connectivity -> SPI -> Parameter Setting -> Set "Prescalar" to arrange "Baudrate"
@@ -224,3 +224,11 @@ RTC
 	month  = sdatestructget.Month;
 	year   = sdatestructget.Year;
 ```
+
+I2C_MASTER
+--------------------------
+
+1. Select I2C as I2C
+2. Then goto Configuration -> I2C -> Parameter Setting
+3. Make config especially Speed
+4. Then generate the code.
